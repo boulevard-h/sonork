@@ -59,8 +59,9 @@ class NetworkServer (Process):
             except Exception as e:
                 self.logger.error(str((e, traceback.print_exc())))
 
-        self.streamServer = StreamServer((self.ip, self.port), _handler)
-        self.streamServer.serve_forever()
+        if self.ip == '127.0.0.1' or self.ip == "0.0.0.0":
+            self.streamServer = StreamServer((self.ip, self.port), _handler)
+            self.streamServer.serve_forever()
 
 
     def run(self):

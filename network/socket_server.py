@@ -37,6 +37,7 @@ class NetworkServer (Process):
         def _handler(sock, address):
             jid = self._address_to_id(address)
             buf = b''
+            #print("_handler,", sock.getsockname(), sock.getpeername())
             try:
                 while not self.stop.value:
                     buf += sock.recv(2_000_000)

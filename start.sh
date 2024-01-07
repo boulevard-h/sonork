@@ -1,8 +1,8 @@
 #!/bin/sh
 
-echo "start.sh <shard_id> <N> <f> <B> <K> <r> <start_num> <num>"
+echo "start.sh <shard_id> <N> <f> <B> <K> <R> <start_num> <num> <tx_num>"
 
-# ./start.sh 3 4 1 2000 1 0 8
+# ./start.sh 3 4 1 2000 1 0 8 20000
 
 rm ./TXs
 touch TXs
@@ -16,12 +16,12 @@ shard_id=0
 while [ "$shard_id" -lt $1 ]; do
     node_id=0
     while [ "$node_id" -lt $2 ]; do
-        if [ $(( $shard_id * $1 + $node_id )) -ge $6 ] && [ $(( $shard_id * $1 + $node_id )) -lt $(($6 + $7)) ]; then
+        if [ $(( $shard_id * $2 + $node_id )) -ge $6 ] && [ $(( $shard_id * $2 + $node_id )) -lt $(($6 + $7)) ]; then
           echo "start node $node_id in shard $shard_id..."
-          python3 run_socket_node.py --sid 'sidA' --id $node_id --shard_id $shard_id --shard_num $1 --N $2 --f $3 --B $4 --K $5 &
-          rm "./TXs_file/TXs$(($shard_id * $1 + $node_id))"
-          rm "./log/consensus-node-$(($shard_id * $1 + $node_id)).log"
-          cp ./TXs "./TXs_file/TXs$(($shard_id * $1 + $node_id))"
+          python3 run_socket_node.py --sid 'sidA' --id $node_id --shard_id $shard_id --shard_num $1 --N $2 --f $3 --B $4 --R $5 --tx_num $8 &
+          rm "./TXs_file/TXs$(($shard_id * $2 + $node_id))"
+          rm "./log/consensus-node-$(($shard_id * $2 + $node_id)).log"
+          cp ./TXs "./TXs_file/TXs$(($shard_id * $2 + $node_id))"
         else
           echo "do nothing"
         fi

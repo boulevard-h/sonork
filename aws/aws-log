@@ -6,7 +6,8 @@ N=2
 node=16
 
 # public IPs --- This is the public IPs of AWS servers
-pubIPsVar=([0]='18.163.113.94')
+pubIPsVar=([0]='18.167.99.158'
+  [1]='43.198.227.65')
  
  
 # Download logs from all remote AWS servers to your local PC

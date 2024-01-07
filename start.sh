@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "start.sh <shard_id> <N> <f> <B> <K> <R> <start_num> <num> <tx_num>"
+echo "start.sh <shard_num> <N> <f> <B> <R> <start_num> <num> <tx_num>"
 
 # ./start.sh 3 4 1 2000 1 0 8 20000
 

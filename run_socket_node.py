@@ -19,6 +19,19 @@ from network.socket_client import NetworkClient
 from multiprocessing import Value as mpValue, Queue as mpQueue
 from ctypes import c_bool
 
+def parse_shard_info(tx):
+    input_shards = re.findall(r'Input Shard: (\[.*?\])', tx)[0]
+    input_valids = re.findall(r'Input Valid: (\[.*?\])', tx)[0]
+    output_shard = re.findall(r'Output Shard: (\d+)', tx)[0]
+    output_valid = re.findall(r'Output Valid: (\d+)', tx)[0]
+
+    input_shards = eval(input_shards)
+    input_valids = eval(input_valids)
+    output_shard = int(output_shard)
+    output_valid = int(output_valid)
+
+    return input_shards, input_valids, output_shard, output_valid
+
 def read_pkl_file(file_path):
     with open(file_path, 'rb') as f:
         data = pickle.load(f)
@@ -153,8 +166,13 @@ if __name__ == '__main__':
         if random.random() < 0.9:
             tx = inter_tx_generator(250, shard_id)
         else:
-            tx = TXs[tmp]
+            input_shards, input_valids, output_shard, output_valid = parse_shard_info(TXs[tmp])
             tmp += 1
+            while shard_id not in input_shards and (shard_id != output_shard or output_valid != 1):
+                input_shards, input_valids, output_shard, output_valid = parse_shard_info(TXs[tmp])
+                tmp += 1
+
+            tx = TXs[tmp]
         cur.execute('insert into txlist (tx) values (?)', (tx,))
     conn.commit()
 

@@ -32,5 +32,5 @@ done
 
 wait
 
-echo "All nodes started. Returning to command line prompt."
+echo "All nodes finished. Returning to command line prompt."
 exec "$SHELL"

@@ -61,10 +61,11 @@ for group_id, values in grouped_data.items():
 # 计算所有组的latency的整体平均值
 overall_avg_latency = total_latency / count
 
-print("每组的平均TPS和latency：")
+print("Average TPS and latency for each group:")
 for group_id, averages in group_averages.items():
-    print(f"组 {group_id}: TPS = {averages[0]:.3f}, Latency = {averages[1]:.3f}")
+    print(f"Group {group_id}: TPS = {averages[0]:.3f}, Latency = {averages[1]:.3f}")
 
-print(f"实际收到数据组数：{count}")
-print(f"\n不同组的TPS累加总和: {total_tps/count*group_count:.3f}")
-print(f"所有组的latency平均值: {overall_avg_latency:.3f}")
+print(f"Number of data groups actually received: {count}")
+print(f"\nTotal TPS sum across different groups: {total_tps/count*group_count:.3f}")
+print(f"Average latency across all groups: {overall_avg_latency:.3f}")
+

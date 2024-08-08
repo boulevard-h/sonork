@@ -1,7 +1,7 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get -y install make bison flex libgmp-dev libmpc-dev python3.8 python3-dev python3-pip libssl-dev
+sudo apt-get -y install make bison flex libgmp-dev git libmpc-dev python3.8 python3-dev python3-pip libssl-dev
 
 wget https://crypto.stanford.edu/pbc/files/pbc-0.5.14.tar.gz
 tar -xvf pbc-0.5.14.tar.gz
@@ -27,7 +27,6 @@ cd charm
 sudo ./configure.sh
 sudo make
 sudo make install
-sudo make test
 cd ..
 
 python3 -m pip install --upgrade pip

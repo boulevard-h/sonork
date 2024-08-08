@@ -62,10 +62,10 @@ for group_id, values in grouped_data.items():
 overall_block_delay = total_block_delay / count
 overall_round_delay = total_round_delay / count
 
-print("每组的平均block_delay、round_delay和time-between-shards：")
+print("Average block_delay, round_delay, and time-between-shards for each group:")
 for group_id, averages in group_averages.items():
-    print(f"组 {group_id}: block_delay = {averages[0]:.3f}, round_delay = {averages[1]:.3f} , time-between-shards = {averages[1]-averages[0]:.3f}")
+    print(f"Group {group_id}: block_delay = {averages[0]:.3f}, round_delay = {averages[1]:.3f}, time-between-shards = {averages[1] - averages[0]:.3f}")
 
-print(f"\n所有组的block_delay平均值: {overall_block_delay:.3f}")
-print(f"\n所有组的round_delay平均值: {overall_round_delay:.3f}")
-print(f"\n所有组的time-between-shards平均值: {overall_round_delay-overall_block_delay:.3f}")
+print(f"\nAverage block_delay across all groups: {overall_block_delay:.3f}")
+print(f"\nAverage round_delay across all groups: {overall_round_delay:.3f}")
+print(f"\nAverage time-between-shards across all groups: {overall_round_delay - overall_block_delay:.3f}")

@@ -30,7 +30,7 @@ while [ "$shard_id" -lt $1 ]; do
     shard_id=$(( shard_id + 1 ))
 done
 
+wait
 
-#echo "start node 3 in shard 0..."
-#python3 run_socket_node.py --sid 'sidA' --id 0 --shard_id 0 --shard_num 2 --N 4 --f 1 --B 1000 --K 1 &
-#--sid sidA --id 1 --shard_id 1 --N 4 --f 1 --B 1000 --K 10
+echo "All nodes finished. Returning to command line prompt."
+exec "$SHELL"

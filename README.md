@@ -1,104 +1,72 @@
 # kronos
 
+*From the NDSS 2025 paper: "Kronos: A Secure and Generic Sharding Blockchain Consensus with Optimized Overhead"*
+
 Proof-of-Concept implementation for a sharding asynchronous BFT consensus framework.
 
-The code uses Dumbo-2 (Guo et al. CCS'2020) inside shards , and use loading pools to solve 
+Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(main-branch), Rotating-Hotstuff(hotstuff-branch).
 
-cross-slice collaboration issues. The code is forked from the implementation of BDT protocol, 
+### Quick Start
 
-but actually it only uses Dumbo module and related Honeybadger part.
+#### ubuntu
 
 1. To run the benchmarks at your local machine (with Ubuntu 18.04 LTS), use env-batch.sh to  install all dependencies:
-    ```shell
-    sudo ./env-batch.sh
-    ```
-    
+
+    `sudo ./env-batch.sh`
+
 2. A quick start to run kronos can be:
-   ```
-   ./start.sh 3 4 1 1000 5 0 12 1250 3000
-   ```
-   
-      It means:
-   
-   ​	 	The protocol has 3 shards , each shard has 4 nodes(include 1 fake node); batch 1000, round 5；
-   
-   ​		The server itself run 12 nodes, start from node 0;
-   
-   ​		each nodes' TXs pool has 1250Txs, and the cross-shard part of them is chosen from a pre-generated 3000TXs list.
-   
-3. If you would like to test the code among AWS cloud servers (with Ubuntu 18.04 LTS). You can follow the commands inside /aws to remotely start the protocols at all servers. An example to conduct the WAN tests from your PC side terminal can be:
-   ```
-   sudo ./aws/aws-pre
-   sudo ./aws/aws-run
-   sudo ./aws/aws-log
-   ```
 
-​		note that aws-pre only need to run 1 time.
+   `./start.sh 3 4 1 1000 5 0 12 1250 3000`
 
+   This command initiates a quick experiment. Here is a breakdown of the parameters:
 
+   `./start.sh [shard-num] [N] [f] [B] [R] (( i * node )) node [TXs] [cross-shard TXs]`
 
+   * `[shard-num]`: number of shards in the system
+   * `[N]`:shard size
+   * `[f]`: number of Byzantine nodes inside each shard
+   * `[B]`: BFT batch size
+   * `[R]`: number of BFT rounds run in each test
+   * `(( i * node ))` node: which node to start from (usually at 0)
+   * `[TXs]`: size of each node's transaction queue
+   * `[cross-shard TXs]`: number of overall cross-shard transactions in the system
 
+    Once the execution is complete, you will see the following message
 
-Here down below is the original README.md of HoneyBadgerBFT
+#### docker
 
-# HoneyBadgerBFT
-The Honey Badger of BFT Protocols.
+We have created a Dockerfile for quick local deployment and uploaded the image to Dockerhub. See the `docker` folder for details.
 
-<img width=200 src="http://i.imgur.com/wqzdYl4.png"/>
+### Distributed deployment
 
-[![Travis branch](https://img.shields.io/travis/initc3/HoneyBadgerBFT-Python/dev.svg)](https://travis-ci.org/initc3/HoneyBadgerBFT-Python)
-[![Codecov branch](https://img.shields.io/codecov/c/github/initc3/honeybadgerbft-python/dev.svg)](https://codecov.io/github/initc3/honeybadgerbft-python?branch=dev)
+#### key generation
 
-HoneyBadgerBFT is a leaderless and completely asynchronous BFT consensus protocols.
-This makes it a good fit for blockchains deployed over wide area networks
-or when adversarial conditions are expected.
-HoneyBadger nodes can even stay hidden behind anonymizing relays like Tor, and
-the purely-asynchronous protocol will make progress at whatever rate the
-network supports.
+`python3 run_trusted_key_gen.py --N [N] --f [f]`
 
-This repository contains a Python implementation of the HoneyBadgerBFT protocol.
-It is still a prototype, and is not approved for production use. It is intended
-to serve as a useful reference and alternative implementations for other projects.
+* `[N]`:shard size
+* `[f]`: number of Byzantine nodes inside each shard
 
-## Development Activities
+#### aws deployment
 
-Since its initial implementation, the project has gone through a substantial
-refactoring, and is currently under active development.
+If you would like to test the code among AWS cloud servers (with Ubuntu 18.04 LTS). You can follow the commands inside /aws to remotely start the protocols at all servers. A detail example to conduct the WAN tests from your PC side terminal can be:
 
-At the moment, the following three milestones are being focused on:
+* Start the server on the Amazon Cloud web interface. Enter the relevant parameters (***region***, ***N*** (number of servers), ***node*** (number of nodes per server)) in the corresponding places in `data/script-generator.py`.
+* Run `data/script-generator.py` to generate the script for the nodes and IP sections, and replace them in the files within the `aws` folder.
+* Adjust the version to be run (modify the git clone content in `aws-pre`) and the run parameters (modify the `./start.sh` parameters in `aws-run`), then run `aws-pre`, `aws-config`, `aws-run`, and `aws-log` sequentially.
+ ```shell
+ ./aws-pre
+ ./aws-config --keys
+ ./aws-run
+ ./aws-log
+ ```
 
-* [Bounded Badger](https://github.com/initc3/HoneyBadgerBFT-Python/milestone/3)
-* [Test Network](https://github.com/initc3/HoneyBadgerBFT-Python/milestone/2<Paste>)
-* [Release 1.0](https://github.com/initc3/HoneyBadgerBFT-Python/milestone/1)
-
-A roadmap of the project can be found in [ROADMAP.rst](./ROADMAP.rst).
+（For convenience, all keys are distributed here to all servers in *aws-config*. You can modify the script to send a specific key to a specific server.）
 
 
-### Contributing
-Contributions are welcomed! To quickly get setup for development:
+* Use the scripts in the `data` folder to process the retrieved data (stored in `total-log`).
 
-1. Fork the repository and clone your fork. (See the Github Guide
-   [Forking Projects](https://guides.github.com/activities/forking/) if
-   needed.)
 
-2. Install [`Docker`](https://docs.docker.com/install/). (For Linux, see
-   [Manage Docker as a non-root user](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user)
-   to run `docker` without `sudo`.)
-
-3. Install [`docker-compose`](https://docs.docker.com/compose/install/).
-
-4. Run the tests (the first time will take longer as the image will be built):
-
-   ```bash
-   $ docker-compose run --rm honeybadger
-   ```
-
-   The tests should pass, and you should also see a small code coverage report
-   output to the terminal.
-
-If the above went all well, you should be setup for developing
-**HoneyBadgerBFT-Python**!
 
 ## License
-This is released under the CRAPL academic license. See ./CRAPL-LICENSE.txt
-Other licenses may be issued at the authors' discretion.
+
+This is released under the CRAPL academic license. See ./CRAPL-LICENSE.txt Other licenses may be issued at the authors' discretion.

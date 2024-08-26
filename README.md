@@ -13,11 +13,11 @@ Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(m
 1. To run the benchmarks at your local machine (with Ubuntu 18.04 LTS), use env-batch.sh to  install all dependencies:
 
     `sudo ./env-batch.sh`
-   
-*Note: Some underlying dependencies may be missing when configuring the local environment, such as **libssl-dev** or **libgmp3-dev**. Please install it yourself. This issue will not occur with subsequent docker and aws environments.
-Some error messages during environment configuration do not affect the overall running process of the test code (for example, the Make Test error of charm). After the configuration is complete, you can run the code first without having to solve all the errors.*
 
-3. A quick start to run kronos can be:
+    *Note: Some underlying dependencies may be missing when configuring the local environment, such as **libssl-dev** or **libgmp3-dev**. Please install it yourself. This issue will not occur with subsequent docker and aws environments.
+    Some error messages during environment configuration do not affect the overall running process of the test code (for example, the Make Test error of charm). After the configuration is complete, you can run the code first without having to solve all the errors.*
+
+2. A quick start to run kronos can be:
 
    `./start.sh 3 4 1 1000 5 0 12 1250 3000`
 

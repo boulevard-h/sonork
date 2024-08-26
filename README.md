@@ -55,15 +55,14 @@ If you would like to test the code among AWS cloud servers (with Ubuntu 18.04 LT
 
 * Start the server on the Amazon Cloud web interface. Enter the relevant parameters (***region***, ***N*** (number of servers), ***node*** (number of nodes per server)) in the corresponding places in `data/script-generator.py`.
 * Run `data/script-generator.py` to generate the script for the nodes and IP sections, and replace them in the files within the `aws` folder.
-* Adjust the version to be run (modify the git clone content in `aws-pre`) and the run parameters (modify the `./start.sh` parameters in `aws-run`), then run `aws-pre`, `aws-config`, `aws-run`, and `aws-log` sequentially.
+* Adjust the version to be run (modify the git clone content in `aws-pre`) and the run parameters (modify the `./start.sh` parameters in `aws-run`), then run `aws-pre`, `aws-run`, and `aws-log` sequentially.
  ```shell
  ./aws-pre
- ./aws-config --keys
  ./aws-run
  ./aws-log
  ```
 
-（For convenience, all keys are distributed here to all servers in *aws-config*. You can modify the script to send a specific key to a specific server.）
+（For convenience, all keys are distributed here to all servers in *aws-run*. You can modify the script to send a specific key to a specific server.）
 
 
 * Use the scripts in the `data` folder to process the retrieved data (stored in `total-log`).

@@ -2,6 +2,8 @@
 
 *From the NDSS 2025 paper: "Kronos: A Secure and Generic Sharding Blockchain Consensus with Optimized Overhead"*
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13373251.svg)](https://doi.org/10.5281/zenodo.13373251)
+
 Proof-of-Concept implementation for a sharding asynchronous BFT consensus framework.
 
 Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(main-branch), Rotating-Hotstuff(hotstuff-branch).

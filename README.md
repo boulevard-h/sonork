@@ -2,7 +2,7 @@
 
 From NDSS 2025 submission: *"Kronos: A Secure and Generic Sharding Blockchain Consensus with Optimized Overhead"*.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13373251.svg)](https://doi.org/10.5281/zenodo.13373251)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13594519.svg)](https://doi.org/10.5281/zenodo.13594519)
 
 Proof-of-Concept implementation for a sharding blockchain consensus framework. 
 

@@ -1,25 +1,23 @@
-# kronos
+# Kronos
 
-*From the NDSS 2025 paper: "Kronos: A Secure and Generic Sharding Blockchain Consensus with Optimized Overhead"*
+From NDSS 2025 submission: *"Kronos: A Secure and Generic Sharding Blockchain Consensus with Optimized Overhead"*.
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13373251.svg)](https://doi.org/10.5281/zenodo.13373251)
 
-Proof-of-Concept implementation for a sharding asynchronous BFT consensus framework.
+Proof-of-Concept implementation for a sharding blockchain consensus framework. 
 
-Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(main-branch), Rotating-Hotstuff(hotstuff-branch).
+In this project, the intra-shard BFT protocol is implemented using asynchronous Speeding-Dumbo (in the main-branch) or partially synchronous Rotating-Hotstuff (in the hotstuff-branch).
 
-### Quick Start
 
-#### ubuntu
+### Running on Local Machines
 
-1. To run the benchmarks at your local machine (with Ubuntu 18.04 LTS), use env-batch.sh to  install all dependencies:
+The project can be run on local machines (with Ubuntu 18.04 LTS) after using env-batch.sh to install all dependencies:
 
-    `sudo ./env-batch.sh`
+`sudo ./env-batch.sh`
 
-    *Note: Some underlying dependencies may be missing when configuring the local environment, such as **libssl-dev** or **libgmp3-dev**. Please install it yourself. This issue will not occur with subsequent docker and aws environments.
-    Some error messages during environment configuration do not affect the overall running process of the test code (for example, the Make Test error of charm). After the configuration is complete, you can run the code first without having to solve all the errors.*
+*Note: The bash script includes all necessary dependencies to run Kronos on a clean Ubuntu 18.04 LTS machine. If any dependencies are still reported as missing after running the script (likely due to OS differences or other factors), please install the missing dependencies manually. This issue will not occur when using Docker or during distributed deployment. Additionally, some error messages encountered during environment configuration (e.g., the Make Test error from charm) do not affect the overall execution process. Once the configuration is complete, you can run the code without resolving all the errors.*
 
-2. A quick start to run kronos can be:
+A quick start to run Kronos with Speeding-Dumbo (*main-branch*) can be:
 
    `./start.sh 3 4 1 1000 5 0 12 1250 3000`
 
@@ -28,7 +26,7 @@ Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(m
    `./start.sh [shard-num] [N] [f] [B] [R] (( i * node )) node [TXs] [cross-shard TXs]`
 
    * `[shard-num]`: number of shards in the system
-   * `[N]`:shard size
+   * `[N]`: shard size
    * `[f]`: number of Byzantine nodes inside each shard
    * `[B]`: BFT batch size
    * `[R]`: number of BFT rounds run in each test
@@ -36,41 +34,80 @@ Two protocols are currently available as intra-shard protocols: Speeding-Dumbo(m
    * `[TXs]`: size of each node's transaction queue
    * `[cross-shard TXs]`: number of overall cross-shard transactions in the system
 
-    Once the execution is complete, you will see the following message
+When running Kronos with Rotating-Hotstuff (*hotstuff-branch*), the quick start is:
 
-#### docker
+`./start.sh 3 4 1 1000 5 0 12 5000 20000`
 
-We have created a Dockerfile for quick local deployment and uploaded the image to Dockerhub. See the `docker` folder for details.
+ Once the execution is complete, you will see the following message:
+        
+    All nodes finished. Returning to command line prompt.
 
-### Distributed deployment
+#### Running on Local Machines using Docker
 
-#### key generation
+We have also created a Dockerfile for quick local deployment, eliminating the need for manual dependency installation. The Docker image has been uploaded to Dockerhub.
+
+To run Kronos using Docker, please ensure that Docker is installed on your machine. You can install it by running the following command: 
+
+`sudo apt install docker.io`
+
+The following steps outline the process for evaluating the Kronos implementation using the Docker image:
+1. Pull the docker image to your local machine:
+   
+    `sudo docker pull hiddeneer/kronos-1.1`
+
+    This command pulls the implementation that uses Speeding-Dumbo as intra-shard BFT protocol. If you wish to run the implementation with Rotating-Hotstuff, use the following command instead:
+
+    `sudo docker pull hiddeneer/kronos-hotstuff-1.0` 
+    
+2. Run the Docker container:
+   
+    `sudo docker run -it hiddeneer/kronos-1.1`
+
+    or, for the Rotating-Hotstuff version:
+
+    `sudo docker run -it hiddeneer/kronos-hotstuff-1.0`
+
+    Once inside the Docker container, you should be in the *kronos* directory.
+
+3. Execute the quick start:
+   
+    `./start.sh 3 4 1 1000 5 0 12 1250 3000`
+
+
+Please refer to the `/docker` directory for more details on running the Dockerfile.
+
+
+
+### Running with Distributed Deployment
+
+#### Key Generation
+To generate the necessary keys for distributed deployment, use the following command:
 
 `python3 run_trusted_key_gen.py --N [N] --f [f]`
 
-* `[N]`:shard size
+* `[N]`: shard size
 * `[f]`: number of Byzantine nodes inside each shard
 
-#### aws deployment
+#### AWS Deployment
 
-If you would like to test the code among AWS cloud servers (with Ubuntu 18.04 LTS). You can follow the commands inside /aws to remotely start the protocols at all servers. A detail example to conduct the WAN tests from your PC side terminal can be:
+If you would like to run the code among AWS cloud servers (with Ubuntu 18.04 LTS), you can follow the commands in the `/aws` directory to remotely start the protocols on all servers. A detail example of conducting WAN experiments from your PC terminal is as follows:
 
-* Start the server on the Amazon Cloud web interface. Enter the relevant parameters (***region***, ***N*** (number of servers), ***node*** (number of nodes per server)) in the corresponding places in `data/script-generator.py`.
-* Run `data/script-generator.py` to generate the script for the nodes and IP sections, and replace them in the files within the `aws` folder.
-* Adjust the version to be run (modify the git clone content in `aws-pre`) and the run parameters (modify the `./start.sh` parameters in `aws-run`), then run `aws-pre`, `aws-run`, and `aws-log` sequentially.
- ```shell
- ./aws-pre
- ./aws-run
- ./aws-log
- ```
+1. Start the server via the Amazon Cloud web interface. Enter the relevant parameters, such as ***region***, ***N*** (number of servers), and ***node*** (number of nodes per server), in `data/script-generator.py`.
+2. Run `data/script-generator.py` to generate the scripts for the nodes and IP sections, and replace the corresponding sections in the files within the `/aws` folder.
+3. Adjust the version to be executed by modifing the git clone command in `aws-pre` and configure the run parameters by modifing `./start.sh` in `aws-run`. Then, run the following scripts sequentially.
+   
+    ```shell
+    ./aws-pre
+    ./aws-run
+    ./aws-log
+    ```
+    *(For convenience, the script distributes all keys to all servers during aws-run. You can modify the script if you'd prefer to assign specific keys to specific servers.)*
 
-（For convenience, all keys are distributed here to all servers in *aws-run*. You can modify the script to send a specific key to a specific server.）
 
-
-* Use the scripts in the `data` folder to process the retrieved data (stored in `total-log`).
+4. Use the scripts in `/data` directory to process the data, which will be stored in `total-log`.
 
 
 
 ## License
 
-This is released under the CRAPL academic license. See ./CRAPL-LICENSE.txt Other licenses may be issued at the authors' discretion.
+This is released under the CRAPL academic license. See ./CRAPL-LICENSE.txt. Other licenses may be issued at the authors' discretion.

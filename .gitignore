@@ -1,0 +1,11 @@
+# python cache
+__pycache__/
+
+# run data
+/log/
+node_dbs/node*.db
+/TXs
+
+# libs in env-batch.sh
+/pbc-0.5.14*
+/charm/

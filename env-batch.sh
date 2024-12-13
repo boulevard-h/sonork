@@ -13,12 +13,12 @@ cd ..
 
 sudo ldconfig /usr/local/lib
 
-cat <<EOF >/home/ubuntu/.profile
+cat <<EOF >~/.profile
 export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 EOF
 
-source /home/ubuntu/.profile
+source ~/.profile
 export LIBRARY_PATH=$LIBRARY_PATH:/usr/local/lib
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
  

@@ -144,21 +144,24 @@ def merkleVerify(key, val, roothash, shard_branch, index):
         return False
     return True
 
-'''
-tx = ['<Dummy TX: abc, Input Shard: [0, 2], Output Shard: 1 Finished>',
-      '<Dummy TX: abc, Input Shard: [1, 3], Output Shard: 2 Finished>',
-      '<Dummy TX: abc, Input Shard: [0, 1], Output Shard: 2 Finished>',
-      '<Dummy TX: abc, Input Shard: [2], Output Shard: 3 Finished>',
-      '<Dummy TX: abc, Input Shard: [1, 2], Output Shard: 0 Finished>']
+if __name__ == "__main__":
+    tx = [  # for shard 1
+            '<Dummy TX: ' + '1' * 240 + ', Input Shard: [0], Input Valid: [1], Output Shard: 1, Output Valid: 0 >',
+            '<Dummy TX: ' + '2' * 240 + ', Input Shard: [2], Input Valid: [1], Output Shard: 1, Output Valid: 0 >',
+            '<Dummy TX: ' + '3' * 240 + ', Input Shard: [0, 2], Input Valid: [0, 1], Output Shard: 1, Output Valid: 0 >',
+            # for shard 2
+            '<Dummy TX: ' + '4' * 240 + ', Input Shard: [1], Input Valid: [0], Output Shard: 2, Output Valid: 0 >',
+            '<Dummy TX: ' + '5' * 240 + ', Input Shard: [0], Input Valid: [1], Output Shard: 2, Output Valid: 0 >']
+    tx_batch = json.dumps(tx)
+    merkle_tree, shard_branch, positions = group_and_build_merkle_tree(tx_batch)
+    roothash = merkle_tree[1]
 
-tx2 = ['<Dummy TX: abc, Input Shard: [1, 3], Output Shard: 2 Finished>',
-      '<Dummy TX: abc, Input Shard: [0, 1], Output Shard: 2 Finished>']
-tx_batch = json.dumps(tx)
-val = merkleTree(tx2)[1]
-merkle_tree, shard_branch, positions = group_and_build_merkle_tree(tx_batch)
-print(merkle_tree)
-print(shard_branch)
-roothash = merkle_tree[1]
-index = positions[2]
-print(merkleVerify("2", val, roothash, shard_branch, index))
-'''
+    tx_shard1 = tx[:3]
+    roothash_shard1 = merkleTree(tx_shard1)[1]
+    print(merkleVerify("1", roothash_shard1, roothash, shard_branch, positions[1]))
+
+    tx_shard2 = [
+            '<Dummy TX: ' + '6' * 240 + ', Input Shard: [1], Input Valid: [0], Output Shard: 2, Output Valid: 0 >', # fake tx!
+            '<Dummy TX: ' + '5' * 240 + ', Input Shard: [0], Input Valid: [1], Output Shard: 2, Output Valid: 0 >']
+    roothash_shard2 = merkleTree(tx_shard2)[1]
+    print(merkleVerify("2", roothash_shard2, roothash, shard_branch, positions[2]))
